@@ -102,6 +102,109 @@ tr.hl td{background:var(--brass-soft)}
 textarea{font-family:var(--mono);font-size:12px;min-height:90px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13.5px}
 @media (prefers-reduced-motion:no-preference){.btn,.seg button{transition:background .15s}}
+
+/* legenda skala (dipakai di layar kecil) */
+.scale-legend{display:none;list-style:none;margin:8px 0 0;padding:0;gap:6px}
+.scale-legend li{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.scale-legend li:last-child{border-bottom:0}
+.scale-legend .n,.mk .n{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--surface-2);color:var(--ink);font:600 11px var(--mono);flex:none}
+.scale-legend li.now,.scale-legend li.now .v{color:var(--brass);font-weight:600}
+.scale-legend li.now .n,.mk.now .n{background:var(--brass);color:var(--surface)}
+.scale-legend .v{font-family:var(--mono);color:var(--muted)}
+.mk .n{display:none}
+.fab{display:none}
+
+/* ===== MOBILE ===== */
+@media (max-width:640px){
+  body{padding:0 max(12px,env(safe-area-inset-left)) 0 max(12px,env(safe-area-inset-right));font-size:15px}
+  .wrap{padding-block:max(16px,env(safe-area-inset-top)) calc(96px + env(safe-area-inset-bottom));gap:16px}
+  header{align-items:start;flex-direction:column;gap:10px}
+  header p{font-size:14px}
+  .panel{padding:16px 14px;border-radius:12px}
+  .panel-head{margin-bottom:12px}
+  .panel-head span{font-size:12.5px}
+  h2{font-size:17px}
+
+  /* cegah zoom otomatis iOS + target sentuh lebih besar */
+  input,select,textarea{font-size:16px;padding:11px 12px;min-height:44px}
+  textarea{font-size:13px}
+  .btn{min-height:44px;padding:10px 16px}
+  .btn.small{min-height:40px;padding:8px 12px;font-size:13.5px}
+  .seg button{min-height:42px;padding:9px 14px}
+  .panel-head .seg{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .row .seg{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .row>.btn.small{flex:1 1 auto}
+  .banner{flex-direction:column;align-items:stretch}
+  .banner .btn{width:100%}
+
+  /* ringkasan */
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:10px 12px}
+  .stat b{font-size:15px}
+  .pl{padding:12px 14px}
+  .pl>span:first-child{font-size:13.5px}
+  .pl b{font-size:20px}
+
+  /* skala: tampilkan nomor di garis, detail di legenda */
+  .scale{height:46px;margin:4px 10px 0}
+  .scale .track{top:26px}
+  .mk>span{display:none}
+  .mk .n{display:inline-grid}
+  .mk i{height:14px}
+  .mk.now i{height:18px}
+  .mk.lo{top:22px}
+  .scale-legend{display:grid}
+
+  /* form transaksi */
+  .grid-form{grid-template-columns:1fr 1fr}
+  #txForm label[for="fNote"],#txForm>div:last-child{grid-column:1/-1}
+  label[for="customTarget"]{max-width:none!important;width:100%}
+
+  /* tabel → kartu */
+  .tbl{overflow:visible}
+  table.cards,table.cards tbody{display:block}
+  table.cards thead{display:none}
+  table.cards tr{display:grid;gap:8px 12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  table.cards tr:last-child{border-bottom:0}
+  table.cards td{display:grid;gap:1px;padding:0;border:0;white-space:normal;text-align:left!important;min-width:0}
+  table.cards td[data-label]::before{content:attr(data-label);font:600 10.5px var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  table.cards td[colspan]{grid-column:1/-1}
+  table.cards tr.hl{background:var(--brass-soft);border-radius:8px;padding:12px 10px;border-bottom:0;margin:4px 0}
+  table.cards tr.hl td{background:none}
+
+  /* target jual */
+  #targetPanel{display:flex;flex-direction:column}
+  #targetPanel>.row{order:1;margin:0 0 4px!important}
+  #targetPanel>.tbl{order:2}
+  #targetTbl tr{grid-template-columns:1fr 1fr;grid-template-areas:"t g" "p n" "l l"}
+  #targetTbl .a-t{grid-area:t;font:700 15px var(--display)}
+  #targetTbl .a-p{grid-area:p}#targetTbl .a-p b{font-size:16px}
+  #targetTbl .a-n{grid-area:n}#targetTbl .a-l{grid-area:l}
+  #targetTbl .a-g{grid-area:g;text-align:right!important;justify-items:end;font-size:13px}
+
+  /* riwayat */
+  #txTbl tr{grid-template-columns:1fr 1fr 1fr;grid-template-areas:"date date type" "pec qty gram" "total pg vs" "note note del"}
+  #txTbl .a-date{grid-area:date;font-weight:600}
+  #txTbl .a-type{grid-area:type;justify-items:end;align-self:center}
+  #txTbl .a-pec{grid-area:pec}#txTbl .a-qty{grid-area:qty}#txTbl .a-gram{grid-area:gram}
+  #txTbl .a-total{grid-area:total}#txTbl .a-pg{grid-area:pg}#txTbl .a-vs{grid-area:vs}
+  #txTbl .a-note{grid-area:note;align-self:center;font-size:13px}
+  #txTbl .a-del{grid-area:del;justify-items:end;align-self:center}
+  #txTbl .x{padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px}
+  #txTbl td.num,#txTbl td .num{font-size:13.5px}
+
+  /* per pecahan */
+  #denomTbl th,#denomTbl td{padding:8px 6px;font-size:13px}
+  #denomTbl th{white-space:normal;font-size:10.5px}
+
+  /* tombol cepat catat */
+  .fab{display:flex;position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));z-index:5;align-items:center;gap:6px;border:0;border-radius:99px;background:var(--brass);color:#fff;font:600 15px var(--body);padding:14px 20px;box-shadow:0 6px 18px rgb(0 0 0/.22);cursor:pointer}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom));max-width:calc(100% - 32px);text-align:center}
+}
+@media (max-width:360px){
+  .stat b{font-size:14px}
+  #txTbl tr{grid-template-columns:1fr 1fr;grid-template-areas:"date type" "pec qty" "gram total" "pg vs" "note del"}
+}
 </style>
 
 </head>
@@ -137,6 +240,7 @@ textarea{font-family:var(--mono);font-size:12px;min-height:90px}
       <div>
         <div class="eyebrow" style="margin-bottom:4px">Harga buyback per gram</div>
         <div class="scale" id="scale"><div class="track"></div></div>
+        <ul class="scale-legend" id="scaleLegend"></ul>
       </div>
     </div>
 
@@ -160,9 +264,9 @@ textarea{font-family:var(--mono);font-size:12px;min-height:90px}
 
   <!-- TARGET JUAL -->
   <section class="two">
-    <div class="panel">
+    <div class="panel" id="targetPanel">
       <div class="panel-head"><h2>Jual di harga berapa?</h2><span>Harga buyback / gram yang dibutuhkan</span></div>
-      <div class="tbl"><table>
+      <div class="tbl"><table class="cards" id="targetTbl">
         <thead><tr><th>Target untung</th><th class="r">Buyback / gram</th><th class="r">Diterima bersih</th><th class="r">Laba</th><th class="r">Jarak dari hari ini</th></tr></thead>
         <tbody id="targetBody"></tbody>
       </table></div>
@@ -205,7 +309,7 @@ textarea{font-family:var(--mono);font-size:12px;min-height:90px}
   <!-- RIWAYAT & PECAHAN -->
   <section class="panel">
     <div class="panel-head"><h2>Riwayat transaksi</h2><span id="txCount"></span></div>
-    <div class="tbl"><table>
+    <div class="tbl"><table class="cards" id="txTbl">
       <thead><tr><th>Tanggal</th><th>Jenis</th><th class="r">Pecahan</th><th class="r">Keping</th><th class="r">Gram</th><th class="r">Total</th><th class="r">Per gram</th><th class="r">vs buyback kini</th><th>Catatan</th><th></th></tr></thead>
       <tbody id="txBody"></tbody>
     </table></div>
@@ -214,7 +318,7 @@ textarea{font-family:var(--mono);font-size:12px;min-height:90px}
   <section class="two">
     <div class="panel">
       <div class="panel-head"><h2>Per pecahan</h2><span>Keping yang masih disimpan</span></div>
-      <div class="tbl"><table>
+      <div class="tbl"><table id="denomTbl">
         <thead><tr><th>Pecahan</th><th class="r">Keping</th><th class="r">Gram</th><th class="r">Rata-rata / gram</th></tr></thead>
         <tbody id="denomBody"></tbody>
       </table></div>
@@ -236,6 +340,7 @@ textarea{font-family:var(--mono);font-size:12px;min-height:90px}
     </div>
   </section>
 </div>
+<button class="fab" id="fab" type="button" aria-label="Catat transaksi baru">＋ Catat</button>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -299,12 +404,15 @@ function render(){
   const bep=G>0?priceFor(C,G,0):0, t10=G>0?priceFor(C,G,0.10):0;
   const pts=[{l:'Rata-rata beli',v:avg,lo:true},{l:'Balik modal',v:bep},{l:'Untung 10%',v:t10,lo:true},{l:'Buyback hari ini',v:s.buyback,now:true}].filter(p=>p.v>0);
   const sc=$('scale');sc.querySelectorAll('.mk').forEach(e=>e.remove());
+  pts.forEach((p,i)=>p.n=i+1);
+  $('scaleLegend').innerHTML=[...pts].sort((a,b)=>a.v-b.v).map(p=>`<li class="${p.now?'now':''}"><span class="row" style="gap:8px"><span class="n">${p.n}</span>${p.l}</span><span class="v">${rp(p.v)}</span></li>`).join('');
   if(pts.length){const vs=pts.map(p=>p.v);let mn=Math.min(...vs),mx=Math.max(...vs);const pad=(mx-mn)*0.12||mx*0.05;mn-=pad;mx+=pad;
     for(const p of pts){const el=document.createElement('div');el.className='mk'+(p.now?' now':'')+(p.lo&&!p.now?' lo':'');
       const x=Math.min(92,Math.max(8,(p.v-mn)/(mx-mn)*100));el.style.left=x+'%';
       el.innerHTML=p.lo&&!p.now?`<i></i><span>${p.l}</span><span class="v">${rp(p.v)}</span>`:`<span>${p.l}</span><span class="v">${rp(p.v)}</span><i></i>`;
-      if(!(p.lo&&!p.now))el.innerHTML=`<span>${p.l} <span class="v">${rp(p.v)}</span></span><i></i>`;
-      else el.innerHTML=`<i></i><span>${p.l} <span class="v">${rp(p.v)}</span></span>`;
+      const n=`<b class="n">${p.n}</b>`;
+      if(!(p.lo&&!p.now))el.innerHTML=`<span>${p.l} <span class="v">${rp(p.v)}</span></span>${n}<i></i>`;
+      else el.innerHTML=`<i></i>${n}<span>${p.l} <span class="v">${rp(p.v)}</span></span>`;
       sc.appendChild(el);}
   }
 
@@ -312,7 +420,7 @@ function render(){
   const ct=parseFloat($('customTarget').value);
   const targets=[0,5,10,15,20,30,50];if(!isNaN(ct)&&!targets.includes(ct))targets.push(ct);targets.sort((a,b)=>a-b);
   $('targetBody').innerHTML=G>0?targets.map(r=>{const p=priceFor(C,G,r/100),n=netOf(p*G),gap=s.buyback?p/s.buyback-1:0;const reached=s.buyback>=p;
-    return`<tr class="${r===ct?'hl':''}"><td>${r===0?'Balik modal':'+'+r+'%'}</td><td class="r num"><b>${rp(p)}</b></td><td class="r num">${rp(n)}</td><td class="r num">${rp(n-C)}</td><td class="r num ${reached?'up-t':''}">${reached?'Sudah tercapai':'naik '+(gap*100).toFixed(1).replace('.',',')+'%'}</td></tr>`}).join('')
+    return`<tr class="${r===ct?'hl':''}"><td class="a-t">${r===0?'Balik modal':'Untung +'+r+'%'}</td><td class="r num a-p" data-label="Buyback / gram"><b>${rp(p)}</b></td><td class="r num a-n" data-label="Diterima bersih">${rp(n)}</td><td class="r num a-l" data-label="Laba">${rp(n-C)}</td><td class="r num a-g ${reached?'up-t':''}">${reached?'Sudah tercapai':'naik '+(gap*100).toFixed(1).replace('.',',')+'%'}</td></tr>`}).join('')
     :'<tr><td colspan="5" style="color:var(--muted)">Belum ada emas yang disimpan.</td></tr>';
 
   // simulasi
@@ -328,10 +436,10 @@ function render(){
   // riwayat
   $('txCount').textContent=tx.length+' transaksi';
   $('txBody').innerHTML=tx.length?[...tx].reverse().map(t=>{const g=t.denom*t.qty,pg=t.total/g,vs=t.type==='beli'&&s.buyback?s.buyback/pg-1:null;
-    return`<tr><td class="num">${new Date(t.date).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</td><td><span class="chip ${t.type}">${t.type==='beli'?'Beli':'Jual'}</span></td>
-    <td class="r num">${(+t.denom).toLocaleString('id-ID')} g</td><td class="r num">${t.qty}</td><td class="r num">${gr(g)}</td><td class="r num">${rp(t.total)}</td><td class="r num">${rp(pg)}</td>
-    <td class="r num ${vs==null?'':vs>=0?'up-t':'down-t'}">${vs==null?'—':pc(vs)}</td><td style="color:var(--muted)">${esc(t.note||'')}</td>
-    <td><button class="x" data-del="${t.id}" aria-label="Hapus transaksi">Hapus</button></td></tr>`}).join('')
+    return`<tr><td class="num a-date">${new Date(t.date).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</td><td class="a-type"><span class="chip ${t.type}">${t.type==='beli'?'Beli':'Jual'}</span></td>
+    <td class="r num a-pec" data-label="Pecahan">${(+t.denom).toLocaleString('id-ID')} g</td><td class="r num a-qty" data-label="Keping">${t.qty}</td><td class="r num a-gram" data-label="Gram">${gr(g)}</td><td class="r num a-total" data-label="Total">${rp(t.total)}</td><td class="r num a-pg" data-label="Per gram">${rp(pg)}</td>
+    <td class="r num a-vs ${vs==null?'':vs>=0?'up-t':'down-t'}" data-label="vs buyback">${vs==null?'—':pc(vs)}</td><td class="a-note" style="color:var(--muted)">${esc(t.note||'')}</td>
+    <td class="a-del"><button class="x" data-del="${t.id}" aria-label="Hapus transaksi">Hapus</button></td></tr>`}).join('')
     :'<tr><td colspan="10" style="color:var(--muted)">Belum ada transaksi. Catat pembelian pertama di atas.</td></tr>';
 
   const dk=Object.keys(den).map(Number).filter(k=>den[k].qty>0).sort((a,b)=>a-b);
@@ -359,6 +467,8 @@ $('txForm').addEventListener('submit',e=>{e.preventDefault();
   if(S.demo){S.tx=[];S.demo=false}
   S.tx.push(t);save();render();$('fTotal').value='';$('fNote').value='';toast(t.type==='beli'?'Pembelian tersimpan':'Penjualan tersimpan')});
 $('txBody').addEventListener('click',e=>{const id=e.target.dataset.del;if(!id)return;S.tx=S.tx.filter(t=>t.id!=id);save();render();toast('Transaksi dihapus')});
+$('fab').onclick=()=>{const f=$('txForm');f.closest('section').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'});setTimeout(()=>$('fTotal').focus({preventScroll:true}),400)};
+if('IntersectionObserver' in window)new IntersectionObserver(es=>{$('fab').hidden=es[0].isIntersecting}).observe($('txForm'));
 $('clearDemo').onclick=()=>{S.tx=[];S.demo=false;save();render();toast('Contoh dihapus. Silakan catat pembelian Anda.')};
 
 $('copyBackup').onclick=()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$('backup').value=code;
