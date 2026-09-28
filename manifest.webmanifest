@@ -1,0 +1,16 @@
+{
+  "name": "Tabungan Emas Antam",
+  "short_name": "Tabungan Emas",
+  "description": "Catat pembelian emas Antam, hitung rata-rata harga beli per gram, dan harga buyback untuk balik modal atau target untung.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1A2130",
+  "theme_color": "#1A2130",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

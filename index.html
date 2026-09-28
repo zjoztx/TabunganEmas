@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tabungan Emas Antam</title>
+<meta name="theme-color" content="#1A2130">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tabungan Emas">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F3F1; --surface:#FFFFFF; --surface-2:#E8EAE6; --ink:#1A2130; --muted:#5E6573; --line:#D3D6D0;
+  --brass:#9A7415; --brass-soft:#F1E6C6; --good:#23714F; --good-soft:#DDEFE5; --bad:#A93D2A; --bad-soft:#F6E0DA;
+  --display:"Archivo",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#12161E;--surface:#1A202B;--surface-2:#232A37;--ink:#E9EBEF;--muted:#9AA1AE;--line:#2F3746;
+  --brass:#D9B155;--brass-soft:#3A3120;--good:#5BC592;--good-soft:#1D3329;--bad:#EE8A74;--bad-soft:#3B2420;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#12161E;--surface:#1A202B;--surface-2:#232A37;--ink:#E9EBEF;--muted:#9AA1AE;--line:#2F3746;
+  --brass:#D9B155;--brass-soft:#3A3120;--good:#5BC592;--good-soft:#1D3329;--bad:#EE8A74;--bad-soft:#3B2420;}
+*{box-sizing:border-box}
+html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding:0 16px}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;display:grid;gap:24px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(26px,4vw,34px);font-weight:800}
+h2{font-size:18px;font-weight:700}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+header p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.stamp{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--brass);color:var(--brass);padding:4px 10px;border-radius:3px;font:500 12px var(--mono);letter-spacing:.04em}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.panel-head span{color:var(--muted);font-size:13px}
+
+/* hero: bar harga */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.big{display:grid;gap:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+@media (max-width:520px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);padding:12px 14px;display:grid;gap:2px}
+.stat b{font:500 17px var(--mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.stat small{font-size:12px;color:var(--muted)}
+.pl{border-radius:8px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pl.up{background:var(--good-soft);color:var(--good)}.pl.down{background:var(--bad-soft);color:var(--bad)}
+.pl b{font:600 22px var(--mono)}
+.pl .pct{font:500 14px var(--mono);padding:3px 8px;border-radius:99px;border:1.5px solid currentColor}
+
+/* skala harga */
+.scale{position:relative;height:74px;margin:6px 4px 0}
+.scale .track{position:absolute;left:0;right:0;top:34px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--bad-soft),var(--surface-2) 40%,var(--good-soft))}
+.mk{position:absolute;top:0;transform:translateX(-50%);display:grid;justify-items:center;gap:3px;font-size:11px;white-space:nowrap}
+.mk i{width:2px;height:22px;background:var(--muted);display:block;margin-top:2px}
+.mk.now i{background:var(--brass);width:4px;height:26px;border-radius:2px}
+.mk.now{color:var(--brass);font-weight:600}
+.mk .v{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.mk.lo{top:44px}.mk.lo i{order:-1;margin:0 0 2px}
+
+/* form */
+.grid-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:grid;gap:4px;font-size:12.5px;color:var(--muted);font-weight:500}
+input,select,textarea{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
+input.num{font-family:var(--mono)}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:8px 14px;font:500 14px var(--body);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:6px;padding:9px 16px;font:600 14px var(--body);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:5px 10px;font-size:12.5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hint{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink)}
+.check input{width:auto}
+
+/* tables */
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.r,th.r{text-align:right}
+tr.hl td{background:var(--brass-soft)}
+.chip{font:500 11px var(--mono);padding:2px 7px;border-radius:99px;border:1px solid currentColor}
+.chip.beli{color:var(--brass)}.chip.jual{color:var(--good)}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px}
+.x:hover{color:var(--bad);background:var(--bad-soft)}
+.up-t{color:var(--good)}.down-t{color:var(--bad)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.banner{background:var(--brass-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:13.5px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.sim-out{display:grid;gap:6px;margin-top:14px;font-size:14px}
+.sim-out div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+textarea{font-family:var(--mono);font-size:12px;min-height:90px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13.5px}
+@media (prefers-reduced-motion:no-preference){.btn,.seg button{transition:background .15s}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Logam Mulia · Au 999,9</div>
+      <h1>Tabungan Emas Antam</h1>
+      <p>Catat setiap pembelian, lihat harga rata-rata per gram, dan ketahui harga buyback yang dibutuhkan untuk balik modal atau mencapai target untung.</p>
+    </div>
+    <span class="stamp" id="stampDate">—</span>
+  </header>
+
+  <div class="banner" id="demoBanner" hidden>
+    <span>Ini data <b>contoh</b> supaya terlihat cara kerjanya. Hapus lalu isi dengan pembelian Anda sendiri.</span>
+    <button class="btn small" id="clearDemo">Hapus contoh &amp; mulai</button>
+  </div>
+
+  <!-- RINGKASAN -->
+  <section class="hero">
+    <div class="panel big">
+      <div class="panel-head"><h2>Posisi saat ini</h2><span id="posNote"></span></div>
+      <div class="stats">
+        <div class="stat"><small>Total emas</small><b id="sGram">0 g</b></div>
+        <div class="stat"><small>Total modal</small><b id="sModal">Rp0</b></div>
+        <div class="stat"><small>Rata-rata beli / gram</small><b id="sAvg">Rp0</b></div>
+        <div class="stat"><small>Nilai buyback kotor</small><b id="sGross">Rp0</b></div>
+        <div class="stat"><small>Potongan PPh 22</small><b id="sTax">Rp0</b></div>
+        <div class="stat"><small>Diterima bersih</small><b id="sNet">Rp0</b></div>
+      </div>
+      <div class="pl up" id="plBox"><span>Untung / rugi jika dijual semua hari ini</span><span class="row"><b id="plRp">Rp0</b><span class="pct" id="plPct">0%</span></span></div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:4px">Harga buyback per gram</div>
+        <div class="scale" id="scale"><div class="track"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Harga hari ini</h2><a href="https://www.logammulia.com/id/sell/gold" target="_blank" rel="noopener" style="color:var(--brass);font-size:13px">Cek di logammulia.com ↗</a></div>
+      <div class="grid-form" style="grid-template-columns:1fr 1fr">
+        <label for="pBuyback">Harga buyback / gram (Rp)<input class="num" id="pBuyback" type="number" inputmode="numeric" min="0" step="1000"></label>
+        <label for="pBeli">Harga beli / gram (Rp)<input class="num" id="pBeli" type="number" inputmode="numeric" min="0" step="1000"></label>
+        <label for="pTaxRate">PPh 22 buyback (%)<input class="num" id="pTaxRate" type="number" min="0" step="0.1"></label>
+        <label for="pThreshold">Berlaku jika jual &gt; (Rp)<input class="num" id="pThreshold" type="number" min="0" step="100000"></label>
+      </div>
+      <p class="hint">Default mengikuti aturan buyback emas batangan: PPh 22 1,5% (dengan NPWP) atau 3% (tanpa NPWP) untuk penjualan di atas Rp10 juta. Sesuaikan jika aturan berubah.</p>
+      <div class="row" style="margin-top:10px">
+        <div class="seg" role="group" aria-label="Status NPWP">
+          <button id="npwpYes" aria-pressed="true">Punya NPWP</button><button id="npwpNo" aria-pressed="false">Tanpa NPWP</button>
+        </div>
+      </div>
+      <p class="hint" id="spreadNote"></p>
+    </div>
+  </section>
+
+  <!-- TARGET JUAL -->
+  <section class="two">
+    <div class="panel">
+      <div class="panel-head"><h2>Jual di harga berapa?</h2><span>Harga buyback / gram yang dibutuhkan</span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Target untung</th><th class="r">Buyback / gram</th><th class="r">Diterima bersih</th><th class="r">Laba</th><th class="r">Jarak dari hari ini</th></tr></thead>
+        <tbody id="targetBody"></tbody>
+      </table></div>
+      <div class="row" style="margin-top:12px">
+        <label for="customTarget" style="max-width:170px">Target sendiri (%)<input class="num" id="customTarget" type="number" step="1" value="12"></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Simulasi jual sebagian</h2><span>Pakai harga rata-rata</span></div>
+      <div class="grid-form" style="grid-template-columns:1fr 1fr">
+        <label for="simGram">Gram yang dijual<input class="num" id="simGram" type="number" min="0" step="0.5" value="5"></label>
+        <label for="simPrice">Buyback / gram (Rp)<input class="num" id="simPrice" type="number" min="0" step="1000"></label>
+      </div>
+      <div class="sim-out" id="simOut"></div>
+    </div>
+  </section>
+
+  <!-- INPUT TRANSAKSI -->
+  <section class="panel">
+    <div class="panel-head"><h2>Catat transaksi</h2>
+      <div class="seg" role="group" aria-label="Jenis transaksi">
+        <button id="tBeli" aria-pressed="true">Beli</button><button id="tJual" aria-pressed="false">Jual</button>
+      </div>
+    </div>
+    <form id="txForm" class="grid-form">
+      <label for="fDate">Tanggal<input id="fDate" type="date" required></label>
+      <label for="fDenom">Pecahan (gram)
+        <select id="fDenom">
+          <option>0.5</option><option selected>1</option><option>2</option><option>3</option><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option><option>250</option><option>500</option><option>1000</option>
+        </select></label>
+      <label for="fQty">Jumlah keping<input class="num" id="fQty" type="number" min="1" step="1" value="1" required></label>
+      <label for="fTotal"><span id="fTotalLbl">Total dibayar (Rp)</span><input class="num" id="fTotal" type="number" inputmode="numeric" min="0" step="1000" required></label>
+      <label for="fNote">Catatan<input id="fNote" type="text" placeholder="Butik Pulogadung, termasuk PPh"></label>
+      <div style="display:flex;align-items:end"><button class="btn" type="submit" id="fSubmit" style="width:100%">Simpan pembelian</button></div>
+    </form>
+    <p class="hint" id="fHint">Isi total yang benar-benar dibayar (sudah termasuk pajak & biaya), supaya rata-rata modal akurat.</p>
+  </section>
+
+  <!-- RIWAYAT & PECAHAN -->
+  <section class="panel">
+    <div class="panel-head"><h2>Riwayat transaksi</h2><span id="txCount"></span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Tanggal</th><th>Jenis</th><th class="r">Pecahan</th><th class="r">Keping</th><th class="r">Gram</th><th class="r">Total</th><th class="r">Per gram</th><th class="r">vs buyback kini</th><th>Catatan</th><th></th></tr></thead>
+      <tbody id="txBody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="two">
+    <div class="panel">
+      <div class="panel-head"><h2>Per pecahan</h2><span>Keping yang masih disimpan</span></div>
+      <div class="tbl"><table>
+        <thead><tr><th>Pecahan</th><th class="r">Keping</th><th class="r">Gram</th><th class="r">Rata-rata / gram</th></tr></thead>
+        <tbody id="denomBody"></tbody>
+      </table></div>
+      <p class="hint">Pecahan kecil (0,5–2 g) biasanya dibeli lebih mahal per gram, tapi buyback-nya sama per gram. Wajar jika rata-ratanya lebih tinggi.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Cadangan data</h2><span>Tersimpan di browser ini</span></div>
+      <p class="hint" style="margin-top:0">Data hanya tersimpan di perangkat ini. Salin kode cadangan secara berkala, lalu tempel di perangkat lain untuk memulihkan.</p>
+      <textarea id="backup" aria-label="Kode cadangan" placeholder="Tempel kode cadangan di sini lalu tekan Pulihkan"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn small" id="copyBackup">Salin kode cadangan</button>
+        <button class="btn small ghost" id="restoreBackup">Pulihkan dari kode</button>
+        <button class="btn small ghost" id="resetAll">Hapus semua</button>
+      </div>
+      <div class="row" id="confirmReset" hidden style="margin-top:10px">
+        <span style="font-size:13.5px;color:var(--bad)">Yakin hapus semua transaksi?</span>
+        <button class="btn small" id="yesReset">Ya, hapus</button><button class="btn small ghost" id="noReset">Batal</button>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const KEY='tabungan-emas-antam-v1';
+const rp=n=>(n<0?'−':'')+'Rp'+Math.round(Math.abs(n)).toLocaleString('id-ID');
+const gr=n=>(+n.toFixed(3)).toLocaleString('id-ID')+' g';
+const pc=n=>(n>=0?'+':'−')+Math.abs(n*100).toFixed(2).replace('.',',')+'%';
+const $=id=>document.getElementById(id);
+const today=()=>new Date(Date.now()+7*3600e3).toISOString().slice(0,10);
+
+const DEMO={demo:true,npwp:true,settings:{buyback:2150000,beli:2320000,taxRate:1.5,threshold:10000000},tx:[
+  {id:1,date:'2025-11-12',type:'beli',denom:5,qty:1,total:11350000,note:'Contoh · butik'},
+  {id:2,date:'2026-01-20',type:'beli',denom:10,qty:1,total:22400000,note:'Contoh'},
+  {id:3,date:'2026-03-05',type:'beli',denom:1,qty:3,total:6930000,note:'Contoh · pecahan kecil'},
+  {id:4,date:'2026-05-18',type:'beli',denom:2,qty:2,total:9160000,note:'Contoh'},
+  {id:5,date:'2026-07-02',type:'jual',denom:1,qty:1,total:2080000,note:'Contoh · jual 1 keping'},
+  {id:6,date:'2026-08-14',type:'beli',denom:5,qty:1,total:11600000,note:'Contoh'}
+]};
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.tx)S=structuredClone(DEMO);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+let txType='beli';
+
+function compute(){
+  const tx=[...S.tx].sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+  let G=0,C=0,realized=0; const den={};
+  for(const t of tx){
+    const g=t.denom*t.qty; const d=den[t.denom]||(den[t.denom]={qty:0,g:0,c:0});
+    if(t.type==='beli'){G+=g;C+=t.total;d.qty+=t.qty;d.g+=g;d.c+=t.total}
+    else{const avg=G>0?C/G:0;const cost=avg*Math.min(g,G);realized+=t.total-cost;G=Math.max(0,G-g);C=Math.max(0,C-cost);
+      const dav=d.g>0?d.c/d.g:0;const dg=Math.min(g,d.g);d.qty=Math.max(0,d.qty-t.qty);d.g-=dg;d.c-=dav*dg;}
+  }
+  return{tx,G,C,avg:G>0?C/G:0,realized,den};
+}
+function netOf(gross){const s=S.settings;return gross>s.threshold?gross*(1-s.taxRate/100):gross}
+function priceFor(C,G,r){ // buyback/gram agar laba = r
+  const s=S.settings;const need=C*(1+r);const p0=need/G;
+  return p0*G>s.threshold?need/(G*(1-s.taxRate/100)):p0;
+}
+
+function render(){
+  const s=S.settings,{tx,G,C,avg,realized,den}=compute();
+  $('demoBanner').hidden=!S.demo;
+  $('stampDate').textContent='Per '+new Date(today()).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+  for(const [k,id] of [['buyback','pBuyback'],['beli','pBeli'],['taxRate','pTaxRate'],['threshold','pThreshold']])if(document.activeElement!==$(id))$(id).value=s[k];
+  $('npwpYes').setAttribute('aria-pressed',S.npwp);$('npwpNo').setAttribute('aria-pressed',!S.npwp);
+  if(document.activeElement!==$('simPrice'))$('simPrice').value=$('simPrice').value||s.buyback;
+
+  const gross=G*s.buyback,net=netOf(gross),pl=net-C,plp=C>0?pl/C:0;
+  $('sGram').textContent=gr(G);$('sModal').textContent=rp(C);$('sAvg').textContent=rp(avg);
+  $('sGross').textContent=rp(gross);$('sTax').textContent=rp(gross-net);$('sNet').textContent=rp(net);
+  $('plRp').textContent=(pl>=0?'+':'')+rp(pl);$('plPct').textContent=pc(plp);
+  $('plBox').className='pl '+(pl>=0?'up':'down');
+  $('posNote').textContent=realized?('Laba terealisasi dari penjualan: '+(realized>=0?'+':'')+rp(realized)):'';
+  const spread=s.beli>0?(s.beli-s.buyback)/s.beli:0;
+  $('spreadNote').textContent=s.beli?`Selisih harga beli dan buyback hari ini ${(spread*100).toFixed(1).replace('.',',')}% (${rp(s.beli-s.buyback)} per gram). Emas yang baru dibeli hari ini perlu harga naik sebesar itu dulu untuk balik modal.`:'';
+
+  // skala
+  const bep=G>0?priceFor(C,G,0):0, t10=G>0?priceFor(C,G,0.10):0;
+  const pts=[{l:'Rata-rata beli',v:avg,lo:true},{l:'Balik modal',v:bep},{l:'Untung 10%',v:t10,lo:true},{l:'Buyback hari ini',v:s.buyback,now:true}].filter(p=>p.v>0);
+  const sc=$('scale');sc.querySelectorAll('.mk').forEach(e=>e.remove());
+  if(pts.length){const vs=pts.map(p=>p.v);let mn=Math.min(...vs),mx=Math.max(...vs);const pad=(mx-mn)*0.12||mx*0.05;mn-=pad;mx+=pad;
+    for(const p of pts){const el=document.createElement('div');el.className='mk'+(p.now?' now':'')+(p.lo&&!p.now?' lo':'');
+      const x=Math.min(92,Math.max(8,(p.v-mn)/(mx-mn)*100));el.style.left=x+'%';
+      el.innerHTML=p.lo&&!p.now?`<i></i><span>${p.l}</span><span class="v">${rp(p.v)}</span>`:`<span>${p.l}</span><span class="v">${rp(p.v)}</span><i></i>`;
+      if(!(p.lo&&!p.now))el.innerHTML=`<span>${p.l} <span class="v">${rp(p.v)}</span></span><i></i>`;
+      else el.innerHTML=`<i></i><span>${p.l} <span class="v">${rp(p.v)}</span></span>`;
+      sc.appendChild(el);}
+  }
+
+  // target
+  const ct=parseFloat($('customTarget').value);
+  const targets=[0,5,10,15,20,30,50];if(!isNaN(ct)&&!targets.includes(ct))targets.push(ct);targets.sort((a,b)=>a-b);
+  $('targetBody').innerHTML=G>0?targets.map(r=>{const p=priceFor(C,G,r/100),n=netOf(p*G),gap=s.buyback?p/s.buyback-1:0;const reached=s.buyback>=p;
+    return`<tr class="${r===ct?'hl':''}"><td>${r===0?'Balik modal':'+'+r+'%'}</td><td class="r num"><b>${rp(p)}</b></td><td class="r num">${rp(n)}</td><td class="r num">${rp(n-C)}</td><td class="r num ${reached?'up-t':''}">${reached?'Sudah tercapai':'naik '+(gap*100).toFixed(1).replace('.',',')+'%'}</td></tr>`}).join('')
+    :'<tr><td colspan="5" style="color:var(--muted)">Belum ada emas yang disimpan.</td></tr>';
+
+  // simulasi
+  const sg=Math.min(parseFloat($('simGram').value)||0,G),sp=parseFloat($('simPrice').value)||0;
+  const sGross=sg*sp,sNet=netOf(sGross),sCost=avg*sg,sPl=sNet-sCost;
+  $('simOut').innerHTML=sg>0?`<div><span>Nilai kotor</span><span class="num">${rp(sGross)}</span></div>
+    <div><span>PPh 22 ${sGross>s.threshold?s.taxRate+'%':'(di bawah batas, tidak kena)'}</span><span class="num">${rp(sGross-sNet)}</span></div>
+    <div><span>Diterima bersih</span><span class="num"><b>${rp(sNet)}</b></span></div>
+    <div><span>Modal ${gr(sg)} (rata-rata)</span><span class="num">${rp(sCost)}</span></div>
+    <div><span>Laba / rugi</span><span class="num ${sPl>=0?'up-t':'down-t'}"><b>${(sPl>=0?'+':'')+rp(sPl)} (${pc(sCost?sPl/sCost:0)})</b></span></div>
+    <div><span>Sisa emas</span><span class="num">${gr(G-sg)}</span></div>`:'<div><span style="color:var(--muted)">Isi jumlah gram untuk melihat hasil.</span></div>';
+
+  // riwayat
+  $('txCount').textContent=tx.length+' transaksi';
+  $('txBody').innerHTML=tx.length?[...tx].reverse().map(t=>{const g=t.denom*t.qty,pg=t.total/g,vs=t.type==='beli'&&s.buyback?s.buyback/pg-1:null;
+    return`<tr><td class="num">${new Date(t.date).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}</td><td><span class="chip ${t.type}">${t.type==='beli'?'Beli':'Jual'}</span></td>
+    <td class="r num">${(+t.denom).toLocaleString('id-ID')} g</td><td class="r num">${t.qty}</td><td class="r num">${gr(g)}</td><td class="r num">${rp(t.total)}</td><td class="r num">${rp(pg)}</td>
+    <td class="r num ${vs==null?'':vs>=0?'up-t':'down-t'}">${vs==null?'—':pc(vs)}</td><td style="color:var(--muted)">${esc(t.note||'')}</td>
+    <td><button class="x" data-del="${t.id}" aria-label="Hapus transaksi">Hapus</button></td></tr>`}).join('')
+    :'<tr><td colspan="10" style="color:var(--muted)">Belum ada transaksi. Catat pembelian pertama di atas.</td></tr>';
+
+  const dk=Object.keys(den).map(Number).filter(k=>den[k].qty>0).sort((a,b)=>a-b);
+  $('denomBody').innerHTML=dk.length?dk.map(k=>`<tr><td class="num">${k.toLocaleString('id-ID')} g</td><td class="r num">${den[k].qty}</td><td class="r num">${gr(den[k].g)}</td><td class="r num">${rp(den[k].c/den[k].g)}</td></tr>`).join(''):'<tr><td colspan="4" style="color:var(--muted)">Belum ada.</td></tr>';
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2200)}
+
+for(const [k,id] of [['buyback','pBuyback'],['beli','pBeli'],['taxRate','pTaxRate'],['threshold','pThreshold']])
+  $(id).addEventListener('input',e=>{S.settings[k]=parseFloat(e.target.value)||0;save();render()});
+$('npwpYes').onclick=()=>{S.npwp=true;S.settings.taxRate=1.5;save();render()};
+$('npwpNo').onclick=()=>{S.npwp=false;S.settings.taxRate=3;save();render()};
+['customTarget','simGram','simPrice'].forEach(id=>$(id).addEventListener('input',render));
+
+function setType(t){txType=t;$('tBeli').setAttribute('aria-pressed',t==='beli');$('tJual').setAttribute('aria-pressed',t==='jual');
+  $('fTotalLbl').textContent=t==='beli'?'Total dibayar (Rp)':'Total diterima (Rp)';
+  $('fSubmit').textContent=t==='beli'?'Simpan pembelian':'Simpan penjualan';
+  $('fHint').textContent=t==='beli'?'Isi total yang benar-benar dibayar (sudah termasuk pajak & biaya), supaya rata-rata modal akurat.':'Isi uang bersih yang diterima setelah potongan pajak. Modal yang keluar dihitung dari harga rata-rata.';}
+$('tBeli').onclick=()=>setType('beli');$('tJual').onclick=()=>setType('jual');
+$('fDate').value=today();
+$('txForm').addEventListener('submit',e=>{e.preventDefault();
+  const t={id:Date.now(),date:$('fDate').value,type:txType,denom:parseFloat($('fDenom').value),qty:parseInt($('fQty').value)||1,total:parseFloat($('fTotal').value)||0,note:$('fNote').value.trim()};
+  if(!t.total){toast('Isi total rupiahnya dulu');return}
+  if(t.type==='jual'){const{G}=compute();if(t.denom*t.qty>G+1e-9){toast('Gram yang dijual melebihi simpanan ('+gr(G)+')');return}}
+  if(S.demo){S.tx=[];S.demo=false}
+  S.tx.push(t);save();render();$('fTotal').value='';$('fNote').value='';toast(t.type==='beli'?'Pembelian tersimpan':'Penjualan tersimpan')});
+$('txBody').addEventListener('click',e=>{const id=e.target.dataset.del;if(!id)return;S.tx=S.tx.filter(t=>t.id!=id);save();render();toast('Transaksi dihapus')});
+$('clearDemo').onclick=()=>{S.tx=[];S.demo=false;save();render();toast('Contoh dihapus. Silakan catat pembelian Anda.')};
+
+$('copyBackup').onclick=()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$('backup').value=code;
+  navigator.clipboard?.writeText(code).then(()=>toast('Kode cadangan disalin'),()=>{$('backup').select();toast('Kode ada di kotak, salin manual')})??($('backup').select(),toast('Kode ada di kotak, salin manual'))};
+$('restoreBackup').onclick=()=>{try{const d=JSON.parse(decodeURIComponent(escape(atob($('backup').value.trim()))));if(!d.tx||!d.settings)throw 0;S=d;save();render();toast('Data dipulihkan')}catch(e){toast('Kode tidak valid. Pastikan tersalin utuh.')}};
+$('resetAll').onclick=()=>$('confirmReset').hidden=false;$('noReset').onclick=()=>$('confirmReset').hidden=true;
+$('yesReset').onclick=()=>{S.tx=[];S.demo=false;save();$('confirmReset').hidden=true;render();toast('Semua transaksi dihapus')};
+render();
+</script>
+</body>
+</html>
